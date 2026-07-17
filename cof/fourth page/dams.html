@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cinematic Love Experience</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Allura&family=Poppins:wght@300;400;600&display=swap");
+
+      :root {
+        --pink-soft: #ff9a9e;
+        --pink-rose: #fecfef;
+        --lavender: #a18cd1;
+        --peach: #fbc2eb;
+        --gold: #f6d365;
+        --white-warm: #fff9f9;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body,
+      html {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #030002b7;
+        font-family: "Allura", cursive;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      /* --- 1. AESTHETIC BACKGROUND ELEMENTS --- */
+      .sky-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          125deg,
+          #350021c7,
+          rgba(157, 0, 255, 0.664),
+          #b9006694,
+          #000000,
+          #38003548
+        );
+        background-size: 400% 400%;
+        animation: auroraSky 20s ease infinite;
+        z-index: 1;
+      }
+
+      @keyframes auroraSky {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .star-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2px;
+        height: 2px;
+        background: transparent;
+        z-index: 2;
+        animation: twinkle 2.5s infinite alternate;
+      }
+
+      @keyframes twinkle {
+        0% {
+          opacity: 0.4;
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+      }
+
+      .moon {
+        position: absolute;
+        top: 8%;
+        right: 12%;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        box-shadow: 15px 15px 0 0 var(--peach);
+        filter: drop-shadow(0 0 20px rgba(255, 0, 183, 0.678));
+        animation: moonGlow 6s infinite alternate;
+        z-index: 2;
+      }
+
+      @keyframes moonGlow {
+        0% {
+          filter: drop-shadow(0 0 15px rgba(109, 0, 78, 0.753));
+        }
+        100% {
+          filter: drop-shadow(0 0 35px rgb(255, 0, 234));
+        }
+      }
+
+      .shooting-star {
+        position: absolute;
+        top: 20%;
+        left: -10%;
+        width: 150px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 1)
+        );
+        border-radius: 50%;
+        transform: rotate(-35deg);
+        filter: drop-shadow(0 0 10px #fff);
+        animation: shootingStar 12s infinite;
+        z-index: 2;
+        opacity: 0;
+      }
+
+      @keyframes shootingStar {
+        0% {
+          transform: rotate(-35deg) translateX(0);
+          opacity: 0;
+        }
+        5% {
+          opacity: 1;
+        }
+        10% {
+          transform: rotate(-35deg) translateX(200vw);
+          opacity: 0;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* --- 2. CANVAS & SCENERY --- */
+      #particle-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .landscape {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 4;
+      }
+
+      .palm-tree {
+        position: absolute;
+        bottom: -20px;
+        transform-origin: bottom center;
+        animation: sway 6s ease-in-out infinite alternate;
+      }
+
+      .palm-tree.left {
+        left: 5%;
+        transform: scale(0.8);
+      }
+      .palm-tree.right {
+        right: 5%;
+        transform: scale(1.1);
+        animation-delay: -3s;
+      }
+
+      .trunk {
+        width: 12px;
+        height: 250px;
+        background: linear-gradient(to top, #020105, #100817);
+        border-radius: 50% 50% 0 0 / 10% 10% 0 0;
+        position: relative;
+        transform: rotate(-5deg);
+      }
+
+      .leaves {
+        position: absolute;
+        top: 0;
+        left: -40px;
+        width: 100px;
+        height: 100px;
+      }
+
+      .leaf {
+        position: absolute;
+        width: 90px;
+        height: 30px;
+        background: #06030c;
+        border-radius: 100% 0%;
+        box-shadow: inset 0px -5px 10px rgba(0, 0, 0, 0.9);
+      }
+
+      .leaf:nth-child(1) {
+        transform: rotate(-20deg) translate(-20px, -10px);
+      }
+      .leaf:nth-child(2) {
+        transform: rotate(10deg) translate(20px, -20px);
+      }
+      .leaf:nth-child(3) {
+        transform: rotate(50deg) translate(30px, 10px);
+      }
+      .leaf:nth-child(4) {
+        transform: rotate(140deg) translate(-10px, 40px);
+      }
+      .leaf:nth-child(5) {
+        transform: rotate(190deg) translate(-40px, 20px);
+      }
+
+      @keyframes sway {
+        0% {
+          transform: rotate(-3deg);
+        }
+        100% {
+          transform: rotate(3deg);
+        }
+      }
+
+      /* --- 3. UI & GLASSMORPHISM --- */
+      .ui-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      .glass-card {
+        background: rgba(20, 10, 30, 0.25);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 3rem 4rem;
+        box-shadow:
+          0 15px 35px rgba(0, 0, 0, 0.5),
+          inset 0 0 20px rgba(255, 154, 158, 0.15);
+        text-align: center;
+        max-width: 800px;
+        width: 90%;
+        animation: floatCard 8s ease-in-out infinite;
+        opacity: 0;
+        transition: opacity 1s ease;
+      }
+
+      .glass-card.active {
+        opacity: 1;
+      }
+
+      @keyframes floatCard {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+          box-shadow:
+            0 15px 35px rgba(0, 0, 0, 0.5),
+            inset 0 0 20px rgba(255, 154, 158, 0.15);
+        }
+        50% {
+          transform: translateY(-15px) scale(1.02);
+          box-shadow:
+            0 25px 45px rgba(0, 0, 0, 0.6),
+            inset 0 0 30px rgba(255, 154, 158, 0.3);
+        }
+      }
+
+      .lyrics-title {
+        font-size: 4.5rem;
+        color: #ffffff;
+        text-shadow:
+          0 0 5px rgba(255, 255, 255, 0.8),
+          0 0 15px rgba(255, 154, 158, 0.9),
+          0 0 35px rgba(255, 154, 158, 0.8),
+          0 0 60px rgba(255, 154, 158, 0.6);
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(20px) scale(0.95);
+        filter: blur(10px);
+      }
+
+      .lyrics-line {
+        font-size: 3rem;
+        font-weight: 400;
+        color: #ffffff;
+        margin-bottom: 0.8rem;
+        letter-spacing: 2px;
+      }
+
+      .char {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(15px) scale(0.8);
+        filter: blur(5px);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        text-shadow:
+          0 0 5px rgba(255, 255, 255, 0.8),
+          0 0 15px rgba(255, 154, 158, 0.9),
+          0 0 30px rgba(255, 154, 158, 0.8),
+          0 0 50px rgba(255, 154, 158, 0.5);
+      }
+
+      .char.visible,
+      .lyrics-title.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0px);
+      }
+
+      .instruction {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #ffffff;
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+        text-shadow:
+          0 0 5px rgba(255, 255, 255, 0.8),
+          0 0 15px rgba(255, 154, 158, 0.9),
+          0 0 30px rgba(255, 154, 158, 0.8);
+        animation: pulse 2s infinite;
+      }
+
+      .watermark {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        color: rgba(255, 255, 255, 0.15);
+        font-size: 0.7rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      /* --- 4. LAST PAGE BUTTON --- */
+      .last-page-btn {
+        position: absolute;
+        bottom: 15%;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        padding: 15px 45px;
+        background: rgba(255, 154, 158, 0.15);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        color: #ffffff;
+        font-family: "Poppins", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        text-decoration: none; /* Prevents underline on link */
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow:
+          0 0 20px rgba(255, 154, 158, 0.3),
+          inset 0 0 15px rgba(255, 255, 255, 0.1);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        z-index: 10;
+        text-align: center;
+      }
+
+      .last-page-btn.visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(0);
+        animation: pulseBtn 2.5s infinite alternate;
+      }
+
+      .last-page-btn:hover {
+        background: rgba(255, 154, 158, 0.3);
+        box-shadow:
+          0 0 35px rgba(255, 154, 158, 0.7),
+          inset 0 0 20px rgba(255, 255, 255, 0.4);
+        transform: translateX(-50%) scale(1.05);
+      }
+
+      @keyframes pulseBtn {
+        0% {
+          box-shadow: 0 0 20px rgba(255, 154, 158, 0.3);
+        }
+        100% {
+          box-shadow: 0 0 40px rgba(255, 154, 158, 0.6);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .glass-card {
+          padding: 2rem 1.5rem;
+        }
+        .lyrics-title {
+          font-size: 3rem;
+        }
+        .lyrics-line {
+          font-size: 1.2rem;
+        }
+        .moon {
+          width: 50px;
+          height: 50px;
+          top: 5%;
+          right: 8%;
+          box-shadow: 10px 10px 0 0 var(--peach);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sky-background"></div>
+    <div class="star-layer" id="stars"></div>
+    <div class="moon"></div>
+    <div class="shooting-star"></div>
+
+    <div class="landscape">
+      <div class="palm-tree left">
+        <div class="trunk"></div>
+        <div class="leaves">
+          <div class="leaf"></div>
+          <div class="leaf"></div>
+          <div class="leaf"></div>
+          <div class="leaf"></div>
+          <div class="leaf"></div>
+        </div>
+      </div>
+      <div class="palm-tree right">
+        <div class="trunk"></div>
+        <div class="leaves">
+          <div class="leaf"></div>
+          <div class="leaf"></div>
+          <div class="leaf"></div>
+          <div class="leaf"></div>
+          <div class="leaf"></div>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="ui-layer">
+      <div class="glass-card" id="lyric-card">
+        <h1 class="lyrics-title" id="lyric-title"></h1>
+        <div id="lyric-content"></div>
+      </div>
+      <div class="instruction" id="instruction-text">Tap anywhere to begin</div>
+
+      <a
+        href="../fifth page/final.html"
+        class="last-page-btn"
+        id="last-page-btn"
+        >Final Animation</a
+      >
+
+      <div class="watermark">VFX BY LOCS</div>
+    </div>
+
+    <script>
+      function generateStars() {
+        const starDiv = document.getElementById("stars");
+        let shadows = "";
+        const numStars = window.innerWidth < 768 ? 100 : 250;
+
+        for (let i = 0; i < numStars; i++) {
+          const x = Math.floor(Math.random() * window.innerWidth);
+          const y = Math.floor(Math.random() * window.innerHeight);
+          const color = Math.random() > 0.8 ? "#fecfef" : "#ffffff";
+          shadows += `${x}px ${y}px ${color}${i !== numStars - 1 ? ", " : ""}`;
+        }
+        starDiv.style.boxShadow = shadows;
+      }
+
+      const canvas = document.getElementById("particle-canvas");
+      const ctx = canvas.getContext("2d", { alpha: true });
+
+      let width, height;
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        generateStars();
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      const colors = [
+        "#ff9a9e",
+        "#fecfef",
+        "#a18cd1",
+        "#fbc2eb",
+        "#f6d365",
+        "#ffffff",
+      ];
+
+      let particles = [];
+      let fireworks = [];
+      let backgroundParticles = [];
+      let mouseTrails = [];
+      let lightBursts = [];
+      let isFinale = false;
+      let finaleTargetParticles = [];
+      let finalePhase = 0;
+      let finaleTimer = 0;
+
+      const mouse = { x: -1000, y: -1000, active: false };
+      window.addEventListener("mousemove", (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        mouse.active = true;
+        for (let i = 0; i < 2; i++)
+          mouseTrails.push(new TrailParticle(mouse.x, mouse.y));
+      });
+      window.addEventListener("mouseout", () => (mouse.active = false));
+
+      const random = (min, max) => Math.random() * (max - min) + min;
+
+      const getHeartCoordinate = (t, scale) => {
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = -(
+          13 * Math.cos(t) -
+          5 * Math.cos(2 * t) -
+          2 * Math.cos(3 * t) -
+          Math.cos(4 * t)
+        );
+        return { x: x * scale, y: y * scale };
+      };
+
+      function drawCanvasHeart(context, x, y, size, color, angle = 0) {
+        context.save();
+        context.translate(x, y);
+        context.rotate(angle);
+        context.fillStyle = color;
+        context.shadowBlur = 10;
+        context.shadowColor = color;
+        context.beginPath();
+        context.moveTo(0, size / 2);
+        context.bezierCurveTo(
+          size / 2,
+          -size / 2,
+          size * 1.5,
+          size / 3,
+          0,
+          size * 1.5,
+        );
+        context.bezierCurveTo(
+          -size * 1.5,
+          size / 3,
+          -size / 2,
+          -size / 2,
+          0,
+          size / 2,
+        );
+        context.fill();
+        context.restore();
+      }
+
+      class Firework {
+        constructor() {
+          this.x = random(width * 0.2, width * 0.8);
+          this.y = height;
+          this.targetY = random(height * 0.15, height * 0.4);
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.speed = random(9, 13);
+          this.angle = -Math.PI / 2 + random(-0.15, 0.15);
+          this.vx = Math.cos(this.angle) * this.speed;
+          this.vy = Math.sin(this.angle) * this.speed;
+          this.trail = [];
+          this.dead = false;
+        }
+        update() {
+          this.trail.push({ x: this.x, y: this.y });
+          if (this.trail.length > 8) this.trail.shift();
+          this.x += this.vx;
+          this.vy += 0.04;
+          this.y += this.vy;
+          if (this.vy >= 0 || this.y <= this.targetY) {
+            this.explode();
+            this.dead = true;
+          }
+        }
+        draw() {
+          ctx.beginPath();
+          if (this.trail.length > 0) {
+            ctx.moveTo(this.trail[0].x, this.trail[0].y);
+            for (let i = 1; i < this.trail.length; i++)
+              ctx.lineTo(this.trail[i].x, this.trail[i].y);
+          }
+          ctx.strokeStyle = this.color;
+          ctx.lineWidth = 3;
+          ctx.lineCap = "round";
+          ctx.stroke();
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = this.color;
+        }
+        explode() {
+          lightBursts.push({
+            x: this.x,
+            y: this.y,
+            life: 1,
+            color: this.color,
+          });
+          const numOutline = 100;
+          for (let i = 0; i < numOutline; i++) {
+            const t = (Math.PI * 2 * i) / numOutline;
+            const pos = getHeartCoordinate(t, random(2.5, 4.5));
+            particles.push(
+              new ExplosionParticle(
+                this.x,
+                this.y,
+                pos.x,
+                pos.y,
+                this.color,
+                false,
+                Math.random() > 0.7,
+              ),
+            );
+          }
+          const numHearts = random(15, 25);
+          for (let i = 0; i < numHearts; i++) {
+            particles.push(
+              new ExplosionParticle(
+                this.x,
+                this.y,
+                random(-8, 8),
+                random(-8, 8),
+                colors[Math.floor(Math.random() * colors.length)],
+                false,
+                true,
+              ),
+            );
+          }
+          for (let i = 0; i < 40; i++) {
+            particles.push(
+              new ExplosionParticle(
+                this.x,
+                this.y,
+                random(-12, 12),
+                random(-12, 12),
+                "#ffffff",
+                true,
+                false,
+              ),
+            );
+          }
+        }
+      }
+
+      class ExplosionParticle {
+        constructor(x, y, vx, vy, color, isGlitter = false, isHeart = false) {
+          this.x = x;
+          this.y = y;
+          this.vx = vx * random(0.85, 1.15);
+          this.vy = vy * random(0.85, 1.15);
+          this.color = color;
+          this.alpha = 1;
+          this.decay = random(0.008, 0.02);
+          this.isGlitter = isGlitter;
+          this.isHeart = isHeart;
+          this.size = isGlitter
+            ? random(1, 3)
+            : isHeart
+              ? random(3, 6)
+              : random(2, 4);
+          this.angle = random(0, Math.PI * 2);
+          this.spin = random(-0.1, 0.1);
+          this.flicker = random(0, 10);
+        }
+        update() {
+          this.vx *= 0.92;
+          this.vy *= 0.92;
+          this.vy += 0.05;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.angle += this.spin;
+          this.alpha -= this.decay;
+          this.flicker++;
+        }
+        draw() {
+          if (this.alpha <= 0) return;
+          if (this.isHeart) {
+            drawCanvasHeart(
+              ctx,
+              this.x,
+              this.y,
+              this.size,
+              this.color,
+              this.angle,
+            );
+          } else {
+            ctx.save();
+            ctx.globalAlpha = this.alpha;
+            if (this.isGlitter && this.flicker % 3 === 0) {
+              ctx.fillStyle = "#fff";
+              ctx.shadowBlur = 15;
+              ctx.shadowColor = "#fff";
+            } else {
+              ctx.fillStyle = this.color;
+              ctx.shadowBlur = 10;
+              ctx.shadowColor = this.color;
+            }
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+      }
+
+      class TrailParticle {
+        constructor(x, y) {
+          this.x = x + random(-10, 10);
+          this.y = y + random(-10, 10);
+          this.vy = random(-1, -2);
+          this.vx = random(-1, 1);
+          this.life = 1;
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.size = random(2, 4);
+          this.isHeart = Math.random() > 0.5;
+          this.angle = random(-0.5, 0.5);
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.life -= 0.02;
+        }
+        draw() {
+          if (this.life <= 0) return;
+          ctx.save();
+          ctx.globalAlpha = this.life;
+          if (this.isHeart) {
+            drawCanvasHeart(
+              ctx,
+              this.x,
+              this.y,
+              this.size,
+              this.color,
+              this.angle,
+            );
+          } else {
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+      }
+
+      class AmbientParticle {
+        constructor() {
+          this.x = random(0, width);
+          this.y = random(0, height);
+          this.vy = random(-0.2, 0.5);
+          this.vx = random(-0.5, 0.5);
+          this.size = random(1, 4);
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.alpha = random(0.1, 0.4);
+          this.angle = random(0, Math.PI * 2);
+          this.spin = random(-0.02, 0.02);
+          this.type = Math.random() > 0.7 ? "petal" : "bokeh";
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.angle += this.spin;
+          if (this.y > height + 10) this.y = -10;
+          if (this.y < -10) this.y = height + 10;
+          if (this.x > width + 10) this.x = -10;
+          if (this.x < -10) this.x = width + 10;
+        }
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = this.color;
+          if (this.type === "petal") {
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, this.size * 2, this.size, 0, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+      }
+
+      class FinaleParticle {
+        constructor(targetX, targetY, delay) {
+          this.x = random(0, width);
+          this.y = random(0, height);
+          this.targetX = targetX;
+          this.targetY = targetY;
+          this.baseTargetX = targetX;
+          this.baseTargetY = targetY;
+          this.vx = 0;
+          this.vy = 0;
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.size = random(2, 6);
+          this.delay = delay;
+          this.active = false;
+          this.exploded = false;
+          this.alpha = 1;
+          this.isHeart = Math.random() > 0.8;
+          this.angle = random(0, Math.PI * 2);
+        }
+        update(phase, center, scalePulse) {
+          if (this.delay > 0) {
+            this.delay--;
+            return;
+          }
+          this.active = true;
+          if (phase === 0 || phase === 1) {
+            const tx = center.x + this.baseTargetX * scalePulse;
+            const ty = center.y + this.baseTargetY * scalePulse;
+            this.vx = this.vx * 0.9 + (tx - this.x) * 0.05;
+            this.vy = this.vy * 0.9 + (ty - this.y) * 0.05;
+            this.angle += 0.05;
+          } else if (phase === 2 && !this.exploded) {
+            const angle = Math.atan2(this.y - center.y, this.x - center.x);
+            const force = random(10, 35);
+            this.vx = Math.cos(angle) * force;
+            this.vy = Math.sin(angle) * force;
+            this.exploded = true;
+          } else if (phase === 2 && this.exploded) {
+            this.vx *= 0.95;
+            this.vy *= 0.95;
+            this.vy += 0.15;
+            this.alpha -= 0.008;
+            this.angle += 0.1;
+          }
+          this.x += this.vx;
+          this.y += this.vy;
+        }
+        draw() {
+          if (!this.active || this.alpha <= 0) return;
+          if (this.isHeart) {
+            ctx.globalAlpha = Math.max(0, this.alpha);
+            drawCanvasHeart(
+              ctx,
+              this.x,
+              this.y,
+              this.size,
+              this.color,
+              this.angle,
+            );
+          } else {
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, this.alpha);
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+      }
+
+      for (let i = 0; i < 40; i++)
+        backgroundParticles.push(new AmbientParticle());
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = lightBursts.length - 1; i >= 0; i--) {
+          const b = lightBursts[i];
+          b.life -= 0.03;
+          if (b.life <= 0) {
+            lightBursts.splice(i, 1);
+            continue;
+          }
+          const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, 400);
+          grad.addColorStop(0, `rgba(255, 255, 255, ${b.life * 0.4})`);
+          grad.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, width, height);
+        }
+
+        backgroundParticles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+
+        if (!isFinale) {
+          if (Math.random() < 0.03 && fireworks.length < 6)
+            fireworks.push(new Firework());
+
+          for (let i = fireworks.length - 1; i >= 0; i--) {
+            fireworks[i].update();
+            fireworks[i].draw();
+            if (fireworks[i].dead) fireworks.splice(i, 1);
+          }
+          for (let i = particles.length - 1; i >= 0; i--) {
+            particles[i].update();
+            particles[i].draw();
+            if (particles[i].alpha <= 0) particles.splice(i, 1);
+          }
+        } else {
+          finaleTimer++;
+          const center = { x: width / 2, y: height / 2 };
+          let scalePulse = 1;
+          if (finaleTimer > 200 && finalePhase === 0) finalePhase = 1;
+          if (finaleTimer > 350 && finalePhase === 1) finalePhase = 2;
+          if (finaleTimer > 550) {
+            isFinale = false;
+            finaleTargetParticles = [];
+          }
+          if (finalePhase === 1)
+            scalePulse = 1 + Math.sin(finaleTimer * 0.1) * 0.15;
+          for (let i = finaleTargetParticles.length - 1; i >= 0; i--) {
+            finaleTargetParticles[i].update(finalePhase, center, scalePulse);
+            finaleTargetParticles[i].draw();
+          }
+        }
+
+        for (let i = mouseTrails.length - 1; i >= 0; i--) {
+          mouseTrails[i].update();
+          mouseTrails[i].draw();
+          if (mouseTrails[i].life <= 0) mouseTrails.splice(i, 1);
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      const lyricsData = [
+        { title: "Set Na HAHA", lines: [] },
+        { title: "", lines: ["Ano Tra???"] },
+        { title: "", lines: ["Swimming?"] },
+        { title: "", lines: ["Tambay?"] },
+        { title: "", lines: ["Nature?"] },
+        { title: "", lines: ["Food Trip?"] },
+        { title: "", lines: ["Tapos Kasama"] },
+        { title: "", lines: ["Yung Mga Real Ones"] },
+        { title: "", lines: ["Tapos Kumpleto"] },
+        { title: "", lines: ["Dammmn"] },
+        { title: "", lines: ["Sana"] },
+        { title: "", lines: ["Mabuo Ulit Yung"] },
+        { title: "", lines: ["Circle Of Friends"] },
+        { title: "", lines: ["Natin:>"] },
+        { title: "I miss you all:>", lines: [] },
+        { title: "Ano Na Bombaneyy Naa", lines: [] },
+      ];
+
+      const titleEl = document.getElementById("lyric-title");
+      const contentEl = document.getElementById("lyric-content");
+      const cardEl = document.getElementById("lyric-card");
+      const instructionEl = document.getElementById("instruction-text");
+
+      // Get the new link button
+      const lastPageBtn = document.getElementById("last-page-btn");
+
+      let currentSlide = -1;
+      let isTransitioning = false;
+      let isFinished = false;
+
+      function triggerGrandFinale() {
+        isFinale = true;
+        finalePhase = 0;
+        finaleTimer = 0;
+        finaleTargetParticles = [];
+        particles = [];
+        fireworks = [];
+        const numFinaleParticles = 1800;
+        let scale = Math.min(width, height) / 45;
+        for (let i = 0; i < numFinaleParticles; i++) {
+          const t = random(0, Math.PI * 2);
+          const pos = getHeartCoordinate(t, scale);
+          finaleTargetParticles.push(
+            new FinaleParticle(
+              pos.x + random(-18, 18),
+              pos.y + random(-18, 18),
+              random(0, 100),
+            ),
+          );
+        }
+      }
+
+      function clearLyrics() {
+        return new Promise((resolve) => {
+          titleEl.classList.remove("visible");
+          const chars = document.querySelectorAll(".char");
+          chars.forEach((char) => {
+            char.classList.remove("visible");
+            char.style.opacity = 0;
+          });
+          setTimeout(() => {
+            titleEl.innerHTML = "";
+            contentEl.innerHTML = "";
+            resolve();
+          }, 800);
+        });
+      }
+
+      async function showLyrics(slideIndex) {
+        const data = lyricsData[slideIndex];
+
+        if (data.title) {
+          titleEl.style.display = "block";
+          titleEl.innerText = data.title;
+          setTimeout(() => titleEl.classList.add("visible"), 50);
+        } else {
+          titleEl.style.display = "none";
+        }
+
+        data.lines.forEach((lineText) => {
+          const lineDiv = document.createElement("div");
+          lineDiv.className = "lyrics-line";
+          lineText.split("").forEach((char) => {
+            const span = document.createElement("span");
+            span.className = "char";
+            span.innerHTML = char === " " ? "&nbsp;" : char;
+            lineDiv.appendChild(span);
+          });
+          contentEl.appendChild(lineDiv);
+        });
+
+        const chars = contentEl.querySelectorAll(".char");
+        chars.forEach((char, i) => {
+          setTimeout(() => char.classList.add("visible"), 50 + i * 30);
+        });
+      }
+
+      async function advanceInteraction() {
+        if (isTransitioning || isFinished) return;
+
+        if (currentSlide === -1) {
+          instructionEl.style.display = "none";
+          cardEl.classList.add("active");
+        }
+
+        isTransitioning = true;
+
+        if (currentSlide >= 0) {
+          await clearLyrics();
+        }
+
+        currentSlide++;
+
+        if (currentSlide >= lyricsData.length) {
+          cardEl.classList.remove("active");
+          triggerGrandFinale();
+          isFinished = true;
+
+          // Show the link button after fireworks settle
+          setTimeout(() => {
+            lastPageBtn.classList.add("visible");
+          }, 8000);
+          return;
+        }
+
+        await showLyrics(currentSlide);
+        isTransitioning = false;
+      }
+
+      // We removed the click listener that reset the script.
+      // Because it's an <a> tag now, clicking it will just naturally take the user to the href link!
+
+      window.addEventListener("pointerdown", advanceInteraction);
+      animate();
+    </script>
+  </body>
+</html>

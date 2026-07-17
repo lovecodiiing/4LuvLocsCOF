@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>An Angel's Welcome</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Allura&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="vignette"></div>
+    <div class="aurora-bg"></div>
+    <div class="bokeh-container">
+      <div class="bokeh"></div>
+      <div class="bokeh"></div>
+      <div class="bokeh"></div>
+    </div>
+
+    <div id="particle-container"></div>
+
+    <div id="spotlight"></div>
+
+    <main class="glass-card" id="card">
+      <div class="card-glow"></div>
+
+      <h1 class="fade-in">An angel has found her way here.</h1>
+      <h2 class="fade-in delay-1">What's your name, cutie?</h2>
+      <p class="fade-in delay-2">Thank you for visiting my site.</p>
+
+      <div class="input-wrapper fade-in delay-3">
+        <input
+          type="text"
+          id="name-input"
+          placeholder="Enter your beautiful name..."
+          autocomplete="off"
+        />
+        <div class="focus-glow"></div>
+      </div>
+
+      <div class="btn-container fade-in delay-4">
+        <button id="continue-btn">
+          <span class="btn-text">Continue</span>
+          <div class="btn-shine"></div>
+        </button>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

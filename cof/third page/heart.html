@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To My Best Friends</title>
+    <!-- Elegant Fonts for the aesthetic feel -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #ffffff;
+        color: #ffffff;
+        overflow: hidden; /* Prevents scrollbars from the canvas */
+        font-family: "Cormorant Garamond", serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      /* Canvas for the pulsating web-like heart */
+      #heartCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+      }
+
+      /* Glassmorphism container for the aesthetic, feminine look */
+      .content-container {
+        position: relative;
+        z-index: 2;
+        width: 90%;
+        max-width: 750px;
+        max-height: 85vh;
+
+        border: 1px solid rgba(255, 50, 146, 0.589);
+        border-radius: 20px;
+        padding: 50px;
+        box-shadow:
+          0 0 40px rgba(220, 20, 60, 0.404),
+          inset 0 0 20px rgba(255, 100, 150, 0.05);
+        overflow-y: auto;
+        text-align: center;
+        opacity: 0;
+        animation: fadeIn 3s forwards;
+      }
+
+      /* Scrollbar styling for the container */
+      .content-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      .content-container::-webkit-scrollbar-thumb {
+        background: rgba(220, 20, 60, 0.986);
+        border-radius: 10px;
+      }
+
+      /* Typewriter Text Styling */
+      #typewriter-text {
+        font-size: 1.3rem;
+        line-height: 1.8;
+        color: #fce8eb;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        text-align: left;
+        margin-bottom: 40px;
+      }
+
+      .cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1.2em;
+        background-color: rgba(220, 20, 60, 0.8);
+        vertical-align: middle;
+        animation: blink 0.8s infinite;
+      }
+
+      /* Signature Styling */
+      .signature {
+        font-family: "Great Vibes", cursive;
+        font-size: 2.5rem;
+        color: #ff4d6d;
+        text-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
+        margin-bottom: 40px;
+        opacity: 0;
+        transition: opacity 2s ease-in;
+      }
+
+      /* Be Kind Button */
+      .be-kind-btn {
+        display: inline-block;
+        font-family: "Montserrat", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: #fff;
+        padding: 15px 40px;
+        border: 1px solid #ff4d6d;
+        border-radius: 50px;
+        background: transparent;
+        transition: all 0.4s ease;
+        opacity: 0;
+        pointer-events: none; /* Disabled until faded in */
+      }
+
+      .be-kind-btn:hover {
+        background: #ff4d6d;
+        box-shadow: 0 0 25px rgba(255, 77, 109, 0.6);
+        transform: translateY(-2px);
+      }
+
+      /* Animations */
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Reveal class for JS to trigger fades */
+      .reveal {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Web-like particle heart background -->
+    <canvas id="heartCanvas"></canvas>
+
+    <!-- Content overlay -->
+    <div class="content-container">
+      <div id="typewriter-text"></div>
+      <div class="signature" id="signature">By Locco Amari Arabbica</div>
+      <a href="../fourth page/dams.html" class="be-kind-btn" id="btnBeKind"
+        >Be Kind</a
+      >
+    </div>
+
+    <script>
+      // --- 1. TYPEWRITER EFFECT ---
+      const message = `To my best friends,
+
+Thank you for being the kind of people who stayed through every chapter of my life—the good days, the difficult moments, the laughter, and the silence. True friendship isn't measured by how long we've known each other, but by the loyalty we continue to show, no matter how much time passes.
+
+Your loyalty has been one of the greatest blessings I could ever ask for. Real friends don't disappear when life gets complicated; they stand beside you, encourage you, and remind you that you're never alone. I will always be grateful for every memory we've created and every challenge we've overcome together.
+
+As we continue chasing our dreams, I hope we never lose the bond that brought us this far. May we celebrate each other's victories, lift each other up after every setback, and always believe in the potential we see in one another. Success means so much more when it's shared with the people who have been there from the very beginning.
+
+No matter where life takes us, I hope our friendship remains unshaken. Here's to loyalty that never fades, gratitude that never ends, and dreams that become reality together.
+
+Thank you for being my best friends—my day ones, my greatest supporters, and the real ones. I appreciate every one of you more than words can express.`;
+
+      const textContainer = document.getElementById("typewriter-text");
+      const signature = document.getElementById("signature");
+      const btnBeKind = document.getElementById("btnBeKind");
+
+      let i = 0;
+      let isTag = false;
+      let currentHTML = "";
+
+      // Format line breaks for HTML before typing
+      const formattedMessage = message.replace(/\n/g, "<br>");
+
+      function typeWriter() {
+        if (i < formattedMessage.length) {
+          // Handle HTML tags (like <br>) instantly so they don't print as raw text
+          if (formattedMessage.charAt(i) === "<") isTag = true;
+
+          currentHTML += formattedMessage.charAt(i);
+          textContainer.innerHTML =
+            currentHTML + '<span class="cursor"></span>';
+
+          if (formattedMessage.charAt(i) === ">") isTag = false;
+
+          i++;
+
+          // Typing speed: normal characters are 30ms, tags are instant
+          let speed = isTag ? 0 : 35;
+
+          // Slight pause on punctuation for realism
+          if (
+            [".", ",", "!", "?"].includes(formattedMessage.charAt(i - 1)) &&
+            !isTag
+          ) {
+            speed = 300;
+          }
+
+          setTimeout(typeWriter, speed);
+        } else {
+          // Finished typing, reveal signature and button
+          textContainer.innerHTML = currentHTML; // Remove cursor
+          setTimeout(() => {
+            signature.classList.add("reveal");
+            setTimeout(() => {
+              btnBeKind.classList.add("reveal");
+            }, 1000);
+          }, 500);
+        }
+      }
+
+      // Start typing after a short delay
+      setTimeout(typeWriter, 2000);
+
+      // --- 2. PARTICLE WEB HEART BACKGROUND ---
+      const canvas = document.getElementById("heartCanvas");
+      const ctx = canvas.getContext("2d");
+
+      let width, height, cx, cy;
+      let particles = [];
+      const particleCount = 200; // Adjust for more/less dense web
+
+      function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        cx = width / 2;
+        cy = height / 2;
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      // Heart mathematical parametric equation
+      function getHeartPoint(t, scale) {
+        // Heart math formula
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = -(
+          13 * Math.cos(t) -
+          5 * Math.cos(2 * t) -
+          2 * Math.cos(3 * t) -
+          Math.cos(4 * t)
+        );
+        return {
+          x: cx + x * scale,
+          y: cy + y * scale,
+        };
+      }
+
+      class Particle {
+        constructor() {
+          this.t = Math.random() * Math.PI * 2; // Position on the heart perimeter
+          this.speed = Math.random() * 0.02 + 0.005; // Speed moving around the heart
+          this.scale = Math.random() * 10 + 12; // Base scale of the heart
+          this.baseScale = this.scale;
+          this.size = Math.random() * 1.5 + 0.5;
+          // Add some chaotic offset so it forms a thick web, not a thin line
+          this.offsetX = (Math.random() - 0.5) * 40;
+          this.offsetY = (Math.random() - 0.5) * 40;
+        }
+
+        update(time) {
+          this.t += this.speed * 0.1;
+          // Pulsating effect using sine wave based on time
+          const pulse = Math.sin(time * 0.002) * 2;
+          this.scale = this.baseScale + pulse;
+
+          const pos = getHeartPoint(this.t, this.scale);
+          this.x = pos.x + this.offsetX;
+          this.y = pos.y + this.offsetY;
+        }
+
+        draw() {
+          ctx.fillStyle = "rgba(255, 35, 122, 0.8)";
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Initialize particles
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+
+      function animate(time) {
+        // Clear with slight opacity for a trailing effect
+        ctx.fillStyle = "rgba(5, 0, 2, 0.2)";
+        ctx.fillRect(0, 0, width, height);
+
+        // Update and draw particles
+        particles.forEach((p) => p.update(time));
+
+        // Draw the web (lines connecting close particles)
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = dx * dx + dy * dy;
+
+            // If particles are close, draw a line between them
+            if (dist < 4000) {
+              // Calculate opacity based on distance (closer = brighter)
+              const opacity = 1 - dist / 4000;
+              ctx.strokeStyle = `rgba(213, 2, 96, ${opacity * 0.4})`;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        particles.forEach((p) => p.draw());
+        requestAnimationFrame(animate);
+      }
+
+      animate(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cinematic Heart</title>
+    <style>
+      /* --- CSS Variables & Luxury Palette --- */
+      :root {
+        --pure-black: #000000;
+        --neon-pink: #ff4fae;
+        --rose-pink: #ff77c8;
+        --lavender: #c8a2ff;
+        --royal-purple: #8b5cf6;
+        --soft-white: #fff8fd;
+        --champagne-gold: #ffd97a;
+        --warm-gold: #ffc94d;
+      }
+
+      /* --- Base & Resets --- */
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: var(--pure-black);
+        overflow: hidden;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
+
+      /* --- Persistent Visual Effects --- */
+      .vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at center,
+          transparent 30%,
+          rgba(0, 0, 0, 0.85) 100%
+        );
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      .aurora {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 50% 100%,
+            rgba(139, 92, 246, 0.08),
+            transparent 60%
+          ),
+          radial-gradient(
+            circle at 80% 0%,
+            rgba(255, 79, 174, 0.05),
+            transparent 50%
+          );
+        z-index: 2;
+        pointer-events: none;
+        animation: breathe 8s infinite alternate ease-in-out;
+      }
+
+      @keyframes breathe {
+        0% {
+          opacity: 0.6;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+      }
+
+      /* --- Elegant UI Layer --- */
+      #ui-layer {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        pointer-events: none; /* Let canvas handle clicks until button appears */
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 248, 253, 0.1);
+        border-radius: 24px;
+        padding: 2.5rem 4rem;
+        text-align: center;
+        color: var(--soft-white);
+        box-shadow:
+          0 10px 40px rgba(0, 0, 0, 0.5),
+          inset 0 0 20px rgba(255, 255, 255, 0.02);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 2s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+
+      .glass-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .message {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        font-weight: 300;
+        margin: 0;
+        min-height: 2rem;
+        background: linear-gradient(
+          to right,
+          var(--soft-white),
+          var(--rose-pink)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* --- Premium Button --- */
+      #continue-btn {
+        margin-top: 2rem;
+        padding: 1rem 3rem;
+        font-size: 1.1rem;
+        letter-spacing: 1.5px;
+        color: var(--soft-white);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 79, 174, 0.15),
+          rgba(139, 92, 246, 0.15)
+        );
+        border: 1px solid rgba(200, 162, 255, 0.3);
+        border-radius: 50px;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        opacity: 0;
+        transform: scale(0.9) translateY(10px);
+        transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+        pointer-events: auto;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(255, 119, 200, 0);
+      }
+
+      #continue-btn.visible {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        box-shadow: 0 0 20px rgba(255, 119, 200, 0.2);
+      }
+
+      #continue-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transform: skewX(-20deg);
+        transition: 0s;
+      }
+
+      #continue-btn:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 79, 174, 0.3),
+          rgba(139, 92, 246, 0.3)
+        );
+        box-shadow:
+          0 0 30px rgba(255, 119, 200, 0.5),
+          inset 0 0 15px rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 248, 253, 0.6);
+        transform: scale(1.05) translateY(-3px);
+      }
+
+      #continue-btn:hover::before {
+        left: 200%;
+        transition: 0.8s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="vignette"></div>
+    <div class="aurora"></div>
+    <canvas id="cinema-canvas"></canvas>
+
+    <div id="ui-layer">
+      <div class="glass-card" id="message-card">
+        <h1 class="message" id="typewriter"></h1>
+      </div>
+      <button id="continue-btn">... &rarr;</button>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("cinema-canvas");
+      const ctx = canvas.getContext("2d", { alpha: false }); // Optimize performance
+
+      let width, height, cx, cy;
+      const colors = [
+        "#FF4FAE",
+        "#FF77C8",
+        "#C8A2FF",
+        "#8B5CF6",
+        "#FFD97A",
+        "#FFFDF8",
+      ];
+      let particles = [];
+      let time = 0;
+      let animationStarted = Date.now();
+
+      // --- Setup & Resize ---
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        cx = width / 2;
+        cy = height / 2;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      // --- Math Helpers ---
+      // Parametric Heart Equation
+      function getHeartPoint(t, scale) {
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = -(
+          13 * Math.cos(t) -
+          5 * Math.cos(2 * t) -
+          2 * Math.cos(3 * t) -
+          Math.cos(4 * t)
+        );
+        return { x: x * scale, y: y * scale };
+      }
+
+      function easeCubicOut(t) {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      // --- Particle System ---
+      class Particle {
+        constructor(type = "ambient") {
+          this.type = type; // ambient, heart, explosion
+          this.reset(true);
+        }
+
+        reset(initial = false) {
+          this.angle = Math.random() * Math.PI * 2;
+          this.radius = Math.random() * 2 + 0.5;
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.alpha = Math.random() * 0.5 + 0.1;
+
+          if (this.type === "ambient") {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+          } else if (this.type === "heart") {
+            // Spawn at edges
+            const edge = Math.random();
+            if (edge < 0.25) {
+              this.x = Math.random() * width;
+              this.y = -10;
+            } else if (edge < 0.5) {
+              this.x = width + 10;
+              this.y = Math.random() * height;
+            } else if (edge < 0.75) {
+              this.x = Math.random() * width;
+              this.y = height + 10;
+            } else {
+              this.x = -10;
+              this.y = Math.random() * height;
+            }
+
+            this.targetT = Math.random() * Math.PI * 2;
+            this.vx = 0;
+            this.vy = 0;
+            this.delay = Math.random() * 3; // Delay arrival
+          }
+        }
+
+        update(elapsed) {
+          if (this.type === "ambient") {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 0 || this.x > width || this.y < 0 || this.y > height)
+              this.reset();
+          } else if (this.type === "heart") {
+            // Scene Logic
+            if (elapsed > 6 && elapsed < 17) {
+              // Gather and Form (Scene 4 & 5)
+              const scale =
+                elapsed > 11 ? 15 + Math.sin(elapsed * 4) * 1.5 : 15; // Heartbeat in Scene 6
+              const target = getHeartPoint(this.targetT, scale);
+              const dx = cx + target.x - this.x;
+              const dy = cy + target.y - this.y;
+
+              // Spiral interpolation
+              this.vx += dx * 0.001;
+              this.vy += dy * 0.001;
+              this.vx *= 0.92; // Friction
+              this.vy *= 0.92;
+
+              this.x += this.vx;
+              this.y += this.vy;
+              this.alpha = Math.min(1, this.alpha + 0.01);
+            } else if (elapsed >= 17 && elapsed < 19) {
+              // Scene 8 - Explosion
+              if (!this.exploded) {
+                this.vx = (Math.random() - 0.5) * 30;
+                this.vy = (Math.random() - 0.5) * 30;
+                this.exploded = true;
+              }
+              this.x += this.vx;
+              this.y += this.vy;
+              this.alpha -= 0.01;
+            }
+          }
+        }
+
+        draw(ctx) {
+          if (this.alpha <= 0) return;
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Initialize Particles
+      for (let i = 0; i < 200; i++) particles.push(new Particle("ambient"));
+      for (let i = 0; i < 2000; i++) particles.push(new Particle("heart"));
+
+      // --- UI Interactions ---
+      const messageCard = document.getElementById("message-card");
+      const continueBtn = document.getElementById("continue-btn");
+      const typewriter = document.getElementById("typewriter");
+      const messageText =
+        "This is the last page of my site. Thank you so much for visiting. Thanks!";
+      let typedLength = 0;
+
+      function typeText() {
+        if (typedLength < messageText.length) {
+          typewriter.innerHTML += messageText.charAt(typedLength);
+          typedLength++;
+          setTimeout(typeText, 70);
+        }
+      }
+
+      // Click Handler for Page Transition
+      continueBtn.addEventListener("click", () => {
+        // Scene 10 Transition
+        document.body.style.opacity = "0"; // Fade out entire page
+        // Generate a burst on canvas
+        for (let i = 0; i < 300; i++) {
+          let p = new Particle("heart");
+          p.x = width / 2;
+          p.y = height / 2;
+          p.exploded = false;
+          particles.push(p);
+        }
+        setTimeout(() => {
+          // Navigate away
+          window.location.href = "../final page/guns.html";
+          // Restore for demo purposes:
+          // document.body.style.opacity = '1';
+        }, 1500);
+      });
+
+      // --- Main Render Loop ---
+      function animate() {
+        const now = Date.now();
+        const elapsed = (now - animationStarted) / 1000; // in seconds
+
+        // Clear with trail effect
+        ctx.globalCompositeOperation = "source-over";
+        ctx.globalAlpha = 0.2; // Adjust for longer/shorter trails
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.globalCompositeOperation = "lighter"; // Additive blending for glow
+
+        // Central Orb (Scene 3 - 6s)
+        if (elapsed > 4 && elapsed < 9) {
+          const intensity = Math.min(1, (elapsed - 4) / 2);
+          const pulse = Math.sin(elapsed * 5) * 5;
+          ctx.globalAlpha = intensity;
+          const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 50 + pulse);
+          grad.addColorStop(0, "rgba(255, 248, 253, 0.8)");
+          grad.addColorStop(0.5, "rgba(255, 79, 174, 0.4)");
+          grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 50 + pulse, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Climax Flash (Scene 8)
+        if (elapsed >= 17 && elapsed < 17.5) {
+          ctx.globalAlpha = 1 - (elapsed - 17) * 2;
+          ctx.fillStyle = "#FFF8FD";
+          ctx.fillRect(0, 0, width, height);
+        }
+
+        // Update & Draw Particles
+        particles.forEach((p) => {
+          p.update(elapsed);
+          p.draw(ctx);
+        });
+
+        // Trigger UI Sequence
+        if (elapsed > 19 && !messageCard.classList.contains("visible")) {
+          messageCard.classList.add("visible");
+          setTimeout(typeText, 1000); // Start typing after fade
+        }
+
+        if (elapsed > 22 && !continueBtn.classList.contains("visible")) {
+          continueBtn.classList.add("visible");
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      // Start Sequence
+      animate();
+    </script>
+  </body>
+</html>

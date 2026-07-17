@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Real Ones - Luxury Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Allura&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="second.css" />
+  </head>
+  <body>
+    <div class="bg-base"></div>
+    <div class="aurora-container">
+      <div class="aurora-blob a-1"></div>
+      <div class="aurora-blob a-2"></div>
+      <div class="aurora-blob a-3"></div>
+      <div class="aurora-blob a-4"></div>
+    </div>
+
+    <div id="particles-layer" class="layer-parallax" data-depth="0.2"></div>
+    <div
+      id="floating-elements-layer"
+      class="layer-parallax"
+      data-depth="0.5"
+    ></div>
+
+    <div id="badge-container">
+      <div class="badge-glow"></div>
+      <div class="badge">
+        <span class="badge-label">Officially Recognized As</span>
+        <span id="badge-name">Nickname</span>
+      </div>
+    </div>
+
+    <main class="card-wrapper layer-parallax" data-depth="0.1">
+      <div id="glass-card" class="glass-card">
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <h1 class="title">The Real Ones</h1>
+          <div class="quote-container">
+            <span id="quote-text"></span><span class="cursor">|</span>
+          </div>
+          <p class="message">
+            Real ones don't ask my name—they already know my top five nicknames.
+            Give me just one nickname.
+          </p>
+
+          <div class="input-group">
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="nickname-input"
+                placeholder="Enter your nickname..."
+                autocomplete="off"
+              />
+              <div class="input-border-glow"></div>
+            </div>
+            <button id="day-ones-btn">
+              <span class="btn-text">Day Ones</span>
+              <div class="btn-shine"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="cursor-trail"></div>
+
+    <script src="second.js"></script>
+  </body>
+</html>
